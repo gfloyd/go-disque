@@ -223,11 +223,12 @@ func (c *RedisClient) Qlen(qname string) (int, error) {
 
 // Enqueue an already existing job by jobId. This can be used for fast retries
 func (c *RedisClient) Enqueue(jobIds ...string) error {
-
-	args := redis.Args{}
-	args.AddFlat(jobIds)
-	_, err := c.conn.Do("ENQUEUE", args)
-	return err
+	args := make(redis.Args, 0, len(jobIds))
+	args = args.AddFlat(jobIds)
+	if _, err := c.conn.Do("ENQUEUE", args...); err != nil {
+		return fmt.Errorf("disque: error sending ENQUEUE: %s", err)
+	}
+	return nil
 }
 
 const HelloVersionId = 1
