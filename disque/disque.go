@@ -73,6 +73,9 @@ type Client interface {
 	// difference between ACK and FASTACK
 	FastAck(jobIds ...string) error
 
+	// Enqueue sends an ENQUEUE command with the given job ids.
+	Enqueue(jobIds ...string) error
+
 	// Qlen returns the length of a given queue
 	Qlen(qname string) (int, error)
 
